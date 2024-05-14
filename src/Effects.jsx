@@ -1,12 +1,44 @@
-import React from 'react'
-import { useLoader } from '@react-three/fiber'
-import { EffectComposer, SSR, Bloom, LUT } from '@react-three/postprocessing'
-import { useControls } from 'leva'
-import { LUTCubeLoader } from 'postprocessing'
+import React from 'react';
+import { useLoader } from '@react-three/fiber';
+import { EffectComposer, SSR, Bloom, LUT } from '@react-three/postprocessing';
+import { useControls } from 'leva';
+import { LUTCubeLoader } from 'postprocessing';
 
 export function Effects() {
-  const texture = useLoader(LUTCubeLoader, '/F-6800-STD.cube')
-  const { enabled, ...props } = useControls({
+  const texture = useLoader(LUTCubeLoader, '/F-6800-STD.cube');
+
+  const {
+    enabled,
+    temporalResolve,
+    STRETCH_MISSED_RAYS,
+    USE_MRT,
+    USE_NORMALMAP,
+    USE_ROUGHNESSMAP,
+    ENABLE_JITTERING,
+    ENABLE_BLUR,
+    DITHERING,
+    temporalResolveMix,
+    temporalResolveCorrectionMix,
+    maxSamples,
+    resolutionScale,
+    blurMix,
+    blurKernelSize,
+    BLUR_EXPONENT,
+    rayStep,
+    intensity,
+    maxRoughness,
+    jitter,
+    jitterSpread,
+    jitterRough,
+    roughnessFadeOut,
+    rayFadeOut,
+    MAX_STEPS,
+    NUM_BINARY_SEARCH_STEPS,
+    maxDepthDifference,
+    maxDepth,
+    thickness,
+    ior,
+  } = useControls({
     enabled: true,
     temporalResolve: true,
     STRETCH_MISSED_RAYS: true,
@@ -36,16 +68,44 @@ export function Effects() {
     maxDepthDifference: { value: 5, min: 0, max: 10 },
     maxDepth: { value: 1, min: 0, max: 1 },
     thickness: { value: 3, min: 0, max: 10 },
-    ior: { value: 1.45, min: 0, max: 2 }
-  })
-  if (enabled) {
+    ior: { value: 1.45, min: 0, max: 2 },
+  });
+
+  return (
     <EffectComposer enableNormalPass={true}>
-      <SSR {...props} />
-      <Bloom luminanceThreshold={0.2} mipmapBlur luminanceSmoothing={0} intensity={1.75} />
+      <SSR
+        temporalResolve={temporalResolve}
+        STRETCH_MISSED_RAYS={STRETCH_MISSED_RAYS}
+        USE_MRT={USE_MRT}
+        USE_NORMALMAP={USE_NORMALMAP}
+        USE_ROUGHNESSMAP={USE_ROUGHNESSMAP}
+        ENABLE_JITTERING={ENABLE_JITTERING}
+        ENABLE_BLUR={ENABLE_BLUR}
+        temporalResolveMix={temporalResolveMix}
+        temporalResolveCorrectionMix={temporalResolveCorrectionMix}
+        maxSamples={maxSamples}
+        blurMix={blurMix}
+        blurKernelSize={blurKernelSize}
+        rayStep={rayStep}
+        intensity={intensity}
+        maxRoughness={maxRoughness}
+        jitter={jitter}
+        jitterSpread={jitterSpread}
+        jitterRough={jitterRough}
+        MAX_STEPS={MAX_STEPS}
+        NUM_BINARY_SEARCH_STEPS={NUM_BINARY_SEARCH_STEPS}
+        maxDepthDifference={maxDepthDifference}
+        maxDepth={maxDepth}
+        thickness={thickness}
+        ior={ior}
+      />
+      <Bloom
+        luminanceThreshold={0.2}
+        mipmapBlur
+        luminanceSmoothing={0}
+        intensity={1.75}
+      />
       <LUT lut={texture} />
     </EffectComposer>
-  }
-  return (
-    <></>
-  )
+  );
 }
